@@ -1,8 +1,8 @@
 /* --------------- This is the game stylesheet */
 
-BODY, HTML { margin: 0px; padding: 0px; }
+BODY, HTML { margin: 0px; padding: 0px; background-color: #000000; color: white; }
 
-.playbutton {
+.playtext {
 
 	position: absolute;
 
@@ -10,7 +10,7 @@ BODY, HTML { margin: 0px; padding: 0px; }
 
 	top: 50%;
 
-	margin-left: -110px;
+	margin-left: -260px;
 
 	margin-top: -20px;
 
@@ -20,16 +20,12 @@ BODY, HTML { margin: 0px; padding: 0px; }
 
 	text-align: center;
 
-	width: 200px;
+	width: 500px;
 	
-	height: 40px;
+	height: 40px
 
 	padding: 10px;
 
-	color: white;
-
-	background-color: #000000;
-
-	cursor: pointer;
+	color: #33FF00;
 
 }
