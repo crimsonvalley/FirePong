@@ -74,19 +74,18 @@ function gameloop() {
 	ticks = curr_time - last_time;
 	if(playing) {
 		if(pressed_up && !pressed_down) {
-			paddle_mid_1 -= PADDLE_VELOCITY * ticks;
+			paddle_top_1 -= PADDLE_VELOCITY * ticks;
 		} else if(!pressed_up && pressed_down) {
-			paddle_mid_1 += PADDLE_VELOCITY * ticks;
+			paddle_top_1 += PADDLE_VELOCITY * ticks;
 		}
-		paddle_top_1 = paddle_mid_1 - (HEIGHT_PADDLE >> 1);
-		paddle_bot_1 = paddle_mid_1 + (HEIGHT_PADDLE >> 1);
+		paddle_bot_1 = paddle_top_1 + HEIGHT_PADDLE;
 		if(paddle_top_1 < 0) {
-			paddle_mid_1 = (HEIGHT_PADDLE >> 1);
+			paddle_top_1 = 0;
 		} else if(paddle_bot_1 > HEIGHT_SCREEN) {
-			paddle_mid_1 = HEIGHT_SCREEN - (HEIGHT_PADDLE >> 1);
+			paddle_top_1 = HEIGHT_SCREEN - HEIGHT_PADDLE;
 		}
-		paddle_top_1 = paddle_mid_1 - (HEIGHT_PADDLE >> 1);
-		paddle_bot_1 = paddle_mid_1 + (HEIGHT_PADDLE >> 1);
+		paddle_mid_1 = paddle_top_1 + (HEIGHT_PADDLE >> 1);
+		paddle_bot_1 = paddle_mid_1 + HEIGHT_PADDLE;
 	}
 	paddle_player.setAttribute("STYLE", "top:" + (paddle_top_1 | 0).toString() + ";");
 	paddle_cpu.setAttribute("STYLE", "top:" + (paddle_top_2 | 0).toString() + ";");
