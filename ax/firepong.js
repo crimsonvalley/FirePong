@@ -8,7 +8,9 @@ var KEY_DOWN = 40;
 var HEIGHT_PADDLE = 150;
 var WIDTH_PADDLE = 24;
 var HEIGHT_BALL = 24;
+var HEIGHT_BALL_HALF = HEIGHT_BALL >> 1;
 var WIDTH_BALL = 24;
+var WIDTH_BALL_HALF = WIDTH_BALL >> 1;
 var PADDLE_VELOCITY = 0.5;
 var BALL_VELOCITY = 6;
 var BALL_VELOCITIES = [];
@@ -39,9 +41,10 @@ var paddle_mid_1 = (HEIGHT_SCREEN >> 1);
 var paddle_mid_2 = paddle_mid_1;
 var paddle_top_1 = paddle_mid_1 - (HEIGHT_PADDLE >> 1);
 var paddle_top_2 = paddle_top_1;
-var paddle_bot_1 = paddle_mid_1 + (HEIGHT_PADDLE >> 1);
-var paddle_bot_2 = paddle_bot_1;
+var paddle_bot_1;
+var paddle_bot_2;
 var ball_mid = paddle_mid_1;
+var ball_right;
 var ball_center = WIDTH_SCREEN >> 1;
 ball_angle = ((new Date()) - 0) % 360;
 
@@ -92,12 +95,14 @@ function gameloop() {
 	if(last_time == -1) last_time = curr_time;
 	ticks = curr_time - last_time;
 	if(playing) {
+	// Update player paddle position based on keypress
 		if(pressed_up && !pressed_down) {
 			paddle_top_1 -= PADDLE_VELOCITY * ticks;
 		} else if(!pressed_up && pressed_down) {
 			paddle_top_1 += PADDLE_VELOCITY * ticks;
 		}
 		paddle_bot_1 = paddle_top_1 + HEIGHT_PADDLE;
+	// Make sure paddle stays within bounds
 		if(paddle_top_1 < 0) {
 			paddle_top_1 = 0;
 		} else if(paddle_bot_1 > HEIGHT_SCREEN) {
@@ -105,10 +110,38 @@ function gameloop() {
 		}
 		paddle_mid_1 = paddle_top_1 + (HEIGHT_PADDLE >> 1);
 		paddle_bot_1 = paddle_mid_1 + HEIGHT_PADDLE;
+	// Update CPU paddle based on ball position
+		paddle_top_2 = ball_mid - (HEIGHT_PADDLE >> 1);
+		paddle_mid_2 = paddle_top_2 + (HEIGHT_PADDLE >> 1);
+		paddle_bot_2 = paddle_mid_2 + HEIGHT_PADDLE;
+	// Update ball velocity based on angle
 		ball_dx = BALL_VELOCITIES[ball_angle][0];
 		ball_dy = BALL_VELOCITIES[ball_angle][1];
 		ball_mid += ball_dy;
 		ball_center += ball_dx;
+	// Handle collisions with boundary & bounce ball
+		if(ball_mid - (HEIGHT_BALL_HALF) < 0) {
+			ball_mid = (HEIGHT_BALL_HALF);
+			ball_angle -= 270;
+			ball_angle = 90 - ball_angle;
+		} else if(ball_mid + (HEIGHT_BALL_HALF) > HEIGHT_SCREEN) {
+			ball_mid = HEIGHT_SCREEN - (HEIGHT_BALL_HALF);
+			ball_angle -= 90;
+			ball_angle = 270 - ball_angle;
+		}
+		if(ball_center - (WIDTH_BALL_HALF) < WIDTH_PADDLE) {
+			if(ball_mid + HEIGHT_BALL_HALF > paddle_top_1) {
+				if(ball_mid - HEIGHT_BALL_HALF < paddle_bot_1) {
+					ball_angle = 0;
+				}
+			}
+		} else if(ball_center + (WIDTH_BALL_HALF) > WIDTH_SCREEN - WIDTH_PADDLE) {
+			if(ball_mid + HEIGHT_BALL_HALF > paddle_top_2) {
+				if(ball_mid - HEIGHT_BALL_HALF < paddle_bot_2) {
+					ball_angle = 180;
+				}
+			}
+		}
 		ball.setAttribute("STYLE", "top:" + (ball_mid | 0).toString() + "px;left:" + (ball_center | 0).toString() + "px;");
 	}
 	paddle_player.setAttribute("STYLE", "top:" + (paddle_top_1 | 0).toString() + "px;");
