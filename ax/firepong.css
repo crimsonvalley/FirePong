@@ -30,7 +30,7 @@ BODY, HTML { margin: 0px; padding: 0px; background-color: #000000; color: white;
 
 }
 
-.paddle {
+.paddle, #ball {
 
 	position: absolute;
 
@@ -38,9 +38,13 @@ BODY, HTML { margin: 0px; padding: 0px; background-color: #000000; color: white;
 
 	display: block;
 
+}
+
+.paddle {
+
 	height: 150px;
 
-	width: 25px;
+	width: 24px;
 
 }
 
@@ -53,5 +57,17 @@ BODY, HTML { margin: 0px; padding: 0px; background-color: #000000; color: white;
 #paddlecpu {
 
 	right: 0px;
+
+}
+
+#ball {
+
+	height: 24px;
+
+	width: 24px;
+
+	margin-top: -12px;
+
+	margin-left: -12px;
 
 }
