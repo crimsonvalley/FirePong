@@ -12,7 +12,7 @@ var HEIGHT_BALL_HALF = HEIGHT_BALL >> 1;
 var WIDTH_BALL = 24;
 var WIDTH_BALL_HALF = WIDTH_BALL >> 1;
 var PADDLE_VELOCITY = 0.5;
-var BALL_VELOCITY = 6;
+var BALL_VELOCITY = 12;
 var BALL_VELOCITIES = [];
 var HEIGHT_SCREEN = window.innerHeight;
 var WIDTH_SCREEN = window.innerWidth;
@@ -111,7 +111,19 @@ function gameloop() {
 		paddle_mid_1 = paddle_top_1 + (HEIGHT_PADDLE >> 1);
 		paddle_bot_1 = paddle_mid_1 + HEIGHT_PADDLE;
 	// Update CPU paddle based on ball position
-		paddle_top_2 = ball_mid - (HEIGHT_PADDLE >> 1);
+		paddle_bot_2 = paddle_top_2 + HEIGHT_PADDLE;
+		if(paddle_top_2 > ball_mid + HEIGHT_BALL_HALF) {
+			paddle_top_2 -= PADDLE_VELOCITY * ticks;
+		}
+		if(paddle_bot_2 < ball_mid - HEIGHT_BALL_HALF) {
+			paddle_top_2 += PADDLE_VELOCITY * ticks;
+		}
+		paddle_bot_2 = paddle_top_2 + HEIGHT_PADDLE;
+		if(paddle_top_2 < 0) {
+			paddle_top_2 = 0;
+		} else if(paddle_bot_2 > HEIGHT_SCREEN) {
+			paddle_top_2 = HEIGHT_SCREEN - HEIGHT_PADDLE;
+		}
 		paddle_mid_2 = paddle_top_2 + (HEIGHT_PADDLE >> 1);
 		paddle_bot_2 = paddle_mid_2 + HEIGHT_PADDLE;
 	// Update ball velocity based on angle
@@ -132,13 +144,13 @@ function gameloop() {
 		if(ball_center - (WIDTH_BALL_HALF) < WIDTH_PADDLE) {
 			if(ball_mid + HEIGHT_BALL_HALF > paddle_top_1) {
 				if(ball_mid - HEIGHT_BALL_HALF < paddle_bot_1) {
-					ball_angle = 0;
+					ball_angle = (((90 * (ball_mid - paddle_mid_1) / (HEIGHT_PADDLE)) + 360) % 360) | 0;
 				}
 			}
 		} else if(ball_center + (WIDTH_BALL_HALF) > WIDTH_SCREEN - WIDTH_PADDLE) {
 			if(ball_mid + HEIGHT_BALL_HALF > paddle_top_2) {
 				if(ball_mid - HEIGHT_BALL_HALF < paddle_bot_2) {
-					ball_angle = 180;
+					ball_angle = (180 + (90 * (paddle_mid_2 - ball_mid) / (HEIGHT_PADDLE))) | 0;
 				}
 			}
 		}
